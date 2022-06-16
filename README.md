@@ -1,5 +1,5 @@
 # AIGoBang
-## Before Start
+## Install
 ```
 pip install pygame
 ```
