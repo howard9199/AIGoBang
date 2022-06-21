@@ -77,25 +77,19 @@ class RenjuBoard(object):
                              [40, h * 40], [600, h * 40], 1)
             pygame.draw.line(screen, black_color,
                              [h * 40,40], [h * 40, 600], 1)
-        # 给棋盘加一个外框，使美观
         pygame.draw.rect(screen, black_color, [36, 36, 568, 568], 3)
  
-        # 在棋盘上标出，天元以及另外4个特殊点位
         pygame.draw.circle(screen, black_color, [320, 320], 5, 0)
         pygame.draw.circle(screen, black_color, [160, 160], 3, 0)
         pygame.draw.circle(screen, black_color, [160, 480], 3, 0)
         pygame.draw.circle(screen, black_color, [480, 160], 3, 0)
         pygame.draw.circle(screen, black_color, [480, 480], 3, 0)
-        #做2次for循环取得棋盘上所有交叉点的坐标
         for row in range(len(self._board)):
             for col in range(len(self._board[row])):
-                # 将下在棋盘上的棋子画出来
                 if self._board[row][col] != EMPTY:
                     ccolor = black_color \
                         if self._board[row][col] == BLACK else white_color
-                    # 取得这个交叉点下的棋子的颜色，并将棋子画出来
                     pos = [40 * (col + 1), 40 * (row + 1)]
-                    # 画出棋子
                     pygame.draw.circle(screen, ccolor, pos, 18, 0)
         # draw scoreboard
         if winner == 0:
@@ -172,7 +166,6 @@ def is_win(board):
             else:
                 flag = 0
  
-        # 判断水平方向胜利
         flag = 0
         for b in board._board[n]:
             if b == 1:
@@ -353,9 +346,8 @@ def main():
                     if is_win(board):
                         running = False
 
-                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: # button表示鼠标左键
-                    x, y = event.pos  # 拿到鼠标当前在窗口上的位置坐标
-                    # 将鼠标的(x, y)窗口坐标，转化换为棋盘上的坐标
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    x, y = event.pos  
                     row = round((y - 40) / 40)     
                     col = round((x - 40) / 40)
                     if not board.move(row, col, is_black):
