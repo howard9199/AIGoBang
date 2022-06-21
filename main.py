@@ -2,6 +2,8 @@ from game_set import *
 from queue import Empty
 import pygame
 import time
+import random
+import copy
 print(pygame.ver)
 
 pygame.font.init()
@@ -39,13 +41,23 @@ class RenjuBoard(object):
         self.team_step = [0] * 2
         self.one_step = [0] * 2
         self.black_team = 0
-        self.reset()
+        self.reset(0)
 
-    def reset(self):
+    def reset(self, numStone):
         self.one_step[0] = 0
         self.one_step[1] = 0
         for row in range(len(self._board)):
             self._board[row] = [EMPTY] * 15
+        for i in range(numStone):
+            r, c = random.randint(0, 15-1), random.randint(0, 15-1)
+            while not self.move(r, c, i%2 == 0):
+                r, c = random.randint(0, 15-1), random.randint(0, 15-1)
+
+    def reset_to(self, board):
+        self.one_step[0] = 0
+        self.one_step[1] = 0
+        self._board = board
+        
 
     def switch(self):
         self.black_team = not self.black_team
@@ -254,8 +266,10 @@ def is_win(board):
 def main():
     team_a_name = team_a
     team_b_name = team_b
-    if(mode == 2):
+    if mode == 2:
         team_b_name = team_a_name
+        print("測試模式說明：")
+        print("每一步棋皆等待玩家操作，若按下空白鍵，則由程式下出下一手，若用滑鼠點按則可直接下下一手棋。")
     modA = __import__(team_a_name)
     modB = __import__(team_b_name)
 
@@ -276,16 +290,30 @@ def main():
     if(mode == 3):
         total_set = 4
 
+    set_count = 0
+
     if mode == 1 or mode == 3:
-        while total_set:
+        while set_count < total_set:
             running = True
             is_black = True
-            board.reset()
+            if set_count % 2 == 0:
+                board.reset( 2 * (set_count//2) )
+                prevInit = copy.deepcopy(board._board)
+            else:
+                board.reset_to(prevInit)
             board.switch()
+
             while running:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
+
+                # bug: it will print the first black stone without delay if initial board is not empty
+                screen.fill([230, 169, 37])
+                board.draw(screen,EMPTY)
+                pygame.display.flip()
+                pygame.time.delay(time_delay)            
+                pygame.display.flip()
 
                 if is_black:
                     if board.black_team == 0:
@@ -295,15 +323,6 @@ def main():
                     print(row,col)
                     if board.move(row, col, is_black):
                         board.one_step[board.black_team] += 1
-                        is_black = not is_black
-                        screen.fill([230, 169, 37])
-                        board.draw(screen,EMPTY)
-                        pygame.display.flip()
-                        status = is_win(board)
-                        if status > 0:
-                            board.gain_point(status)
-                            running = False
-                    pygame.time.delay(time_delay)            
                 else:
                     if board.black_team == 0:
                         row,col = modB.user(board._board,2)
@@ -312,19 +331,24 @@ def main():
                     print(row,col)
                     if board.move(row, col, is_black):
                         board.one_step[not board.black_team] += 1
-                        is_black = not is_black
-                        screen.fill([230, 169, 37])
-                        board.draw(screen,EMPTY)
-                        pygame.display.flip()
-                        status = is_win(board)
-                        if status > 0:
-                            board.gain_point(status)
-                            running = False
-                pygame.time.delay(time_delay)   
-            total_set -= 1
+
+                is_black = not is_black
+                screen.fill([230, 169, 37])
+                board.draw(screen,EMPTY)
+                pygame.display.flip()
+                status = is_win(board)
+                if status > 0:
+                    board.gain_point(status)
+                    running = False
+
+            set_count += 1
+            if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1]:
+                total_set += 2
+
     elif mode is 2:
         running = True
         is_black = True
+        board.reset(0)
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -359,6 +383,7 @@ def main():
                     pygame.display.flip()
                     if is_win(board):
                         running = False
+
     screen.fill([230, 169, 37])
     board.draw(screen,EMPTY)
     pygame.display.flip()
