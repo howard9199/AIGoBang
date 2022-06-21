@@ -14,6 +14,7 @@ print(pygame.ver)
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
 score_font = pygame.font.SysFont('Comic Sans MS', 100)
+step_font = pygame.font.SysFont('Comic Sans MS', 20)
 screen = pygame.display.set_mode((840,640))
 
  
@@ -37,14 +38,18 @@ class RenjuBoard(object):
  
     def __init__(self):
         # self._board = board = [[EMPTY] * 15 for _ in range(15)]
-        # 将棋盘每一个交叉点都看作列表的一个元素位，一共有15*15共225个元素
+        # board 15*15
         self._board = [[]] * 15
         self.team_score = [0] * 2
         self.team_name = ["team"] * 2
+        self.team_step = [0] * 2
+        self.one_step = [0] * 2
         self.black_team = 0
         self.reset()
     #重置棋盘
     def reset(self):
+        self.one_step[0] = 0
+        self.one_step[1] = 0
         for row in range(len(self._board)):
             self._board[row] = [EMPTY] * 15
     #下一局
@@ -60,8 +65,10 @@ class RenjuBoard(object):
     def gain_point(self, win_team):
         if win_team == BLACK:
             self.team_score[self.black_team] += 1
+            self.team_step[self.black_team] += self.one_step[self.black_team]
         else:
             self.team_score[not self.black_team] += 1
+            self.team_step[not self.black_team] += self.one_step[not self.black_team]
     # 给棋盘定义一个函数将自己在screen上面画出来，使用pygame.draw()函数。并且顺便将下了的棋子也画出来
     def draw(self, screen):
         for h in range(1, 16):
@@ -99,6 +106,10 @@ class RenjuBoard(object):
         screen.blit(text_a_name, (650,210))
         text_a_score = score_font.render(str(self.team_score[0]), False, (0, 0, 0))
         screen.blit(text_a_score, (680,50))
+        text_b_name = my_font.render(self.team_name[1], False, (0, 0, 0))
+        screen.blit(text_b_name, (650,370))
+        text_b_score = score_font.render(str(self.team_score[1]), False, (0, 0, 0))
+        screen.blit(text_b_score, (680,480))
 
         #team_a chess
         ccolor = black_color \
@@ -107,7 +118,13 @@ class RenjuBoard(object):
         #team_b chess
         ccolor = black_color \
             if self.black_team == 1 else white_color
-        pygame.draw.circle(screen, ccolor, [780,400], 25, 0)
+        pygame.draw.circle(screen, ccolor, [780,390], 25, 0)
+        #team_a step info
+        text_a_score = step_font.render(str(self.team_step[0]), False, (0, 0, 0))
+        screen.blit(text_a_score, (680,20))
+        #team_b step info
+        text_b_score = step_font.render(str(self.team_step[1]), False, (0, 0, 0))
+        screen.blit(text_b_score, (680,420))
 
 
 
@@ -241,14 +258,15 @@ def main():
     print('1) 機vs機')
     print('2) 測試模式')
     print('3) competition mode')
-    mode = 1#int(input('Enter game mode:'))
+    mode = 3#int(input('Enter game mode:'))
     # 创建棋盘对象
     board = RenjuBoard()
     board.team_name[0] = team_a_name
     board.team_name[1] = team_b_name
 
-    # 用于判断是下黑棋还是白棋
-    is_black = True
+    # step count
+
+
     # pygame初始化函数，固定写法
     pygame.init()
     pygame.display.set_caption('GoBang') # 改标题
@@ -266,7 +284,9 @@ def main():
     if mode == 1 or mode == 3:
         while total_set:
             running = True
+            is_black = True
             board.reset()
+            board.switch()
             while running:
             # 遍历建立窗口后发生的所有事件，固定写法
                 for event in pygame.event.get():
@@ -277,6 +297,7 @@ def main():
                     row,col = modA.user(board._board,1)
                     print(row,col)
                     if board.move(row, col, is_black):
+                        board.one_step[board.black_team] += 1
                         is_black = not is_black
                         screen.fill([125, 95, 24])
                         board.draw(screen)
@@ -291,6 +312,7 @@ def main():
                     row,col = modB.user(board._board,2)
                     print(row,col)
                     if board.move(row, col, is_black):
+                        board.one_step[not board.black_team] += 1
                         is_black = not is_black
                         screen.fill([125, 95, 24])
                         board.draw(screen)
