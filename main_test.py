@@ -12,7 +12,8 @@ print(pygame.ver)
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
-screen = pygame.display.set_mode((640,640)) 
+screen = pygame.display.set_mode((640,640))
+
  
 EMPTY = 0
 BLACK = 1
@@ -37,16 +38,8 @@ class RenjuBoard(object):
         for row in range(len(self._board)):
             self._board[row] = [EMPTY] * 15
     #定义棋盘上的下棋函数，row表示行，col表示列，is_black表示判断当前点位该下黑棋，还是白棋
-
-    def isValid(self, row, col):
-        if row < 0 or row >= 15:
-            return False
-        if col < 0 or col >= 15:
-            return False
-        return self._board[row][col] is EMPTY
- 
     def move(self, row, col, is_black):
-        if self.isValid(row, col):
+        if self._board[row][col] == EMPTY:
             self._board[row][col] = BLACK if is_black else WHITE
             return True
         return False
@@ -198,19 +191,14 @@ def is_win(board):
                     flag = 0
  
     return True
-
-
+ 
  
 def main():
-    teamA = input('Enter team A:')
-    teamB = input('Enter team B:')
-    modA = __import__(teamA)
-    modB = __import__(teamB)
+    modA = __import__(input('Enter team A:'))
+    modB = __import__(input('Enter team B:'))
     print('1) 機vs機')
     print('2) 測試模式')
     mode = int(input('Enter game mode:'))
-    if mode is 2:
-        print('測試模式說明: 黑棋先手，黑白棋輪流，若按下空白鍵會由程式下下一顆棋，若用滑鼠點按則可以直接下該顏色的棋。')
     # 创建棋盘对象
     board = RenjuBoard()
     # 用于判断是下黑棋还是白棋
@@ -234,69 +222,38 @@ def main():
                 if event.type == pygame.QUIT:
                     running = False
 
-            if is_black:
-                row,col = modA.user(board._board,1)
-                print(row,col)
-                if board.move(row, col, is_black):
-                    is_black = not is_black
-                    screen.fill([125, 95, 24])
-                    board.draw(screen)
-                    pygame.display.flip()
-                        # 调用判断胜负函数
-                    if not is_win(board):
-                        #break
-                        running = False
-                pygame.time.delay(1000)            
-            else:
-                row,col = modB.user(board._board,2)
-                print(row,col)
-                if board.move(row, col, is_black):
-                    is_black = not is_black
-                    screen.fill([125, 95, 24])
-                    board.draw(screen)
-                    pygame.display.flip()
-                    # 调用判断胜负函数
-                    if not is_win(board):
-                        #break
-                        running = False
-                pygame.time.delay(1000)   
-
-    elif mode is 2:
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     if is_black:
                         row,col = modA.user(board._board,1)
                     else:
                         row,col = modB.user(board._board,2)
-                    print(f'row: {row}, col: {col}')
-                    if not board.move(row, col, is_black):
-                        print("Invalid index.");
-                        exit()
-                    is_black = not is_black
-                    screen.fill([125, 95, 24])
-                    board.draw(screen)
-                    pygame.display.flip()
-                    if not is_win(board):
-                        running = False
+                    print(row,col)
+                    if board.move(row, col, is_black):
+                        is_black = not is_black
+                        screen.fill([125, 95, 24])
+                        board.draw(screen)
+                        pygame.display.flip()
+                            # 调用判断胜负函数
+                        if not is_win(board):
+                            #break
+                            running = False
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1: # button表示鼠标左键
                     x, y = event.pos  # 拿到鼠标当前在窗口上的位置坐标
                     # 将鼠标的(x, y)窗口坐标，转化换为棋盘上的坐标
                     row = round((y - 40) / 40)     
                     col = round((x - 40) / 40)
-                    if not board.move(row, col, is_black):
-                        print("Invalid index.");
-                        exit()
-                    is_black = not is_black
-                    screen.fill([125, 95, 24])
-                    board.draw(screen)
-                    pygame.display.flip()
-                    if not is_win(board):
-                        running = False
+                    print(row,col)
+                    if board.move(row, col, is_black):
+                        is_black = not is_black
+                        screen.fill([125, 95, 24])
+                        board.draw(screen)
+                        pygame.display.flip()
+                        # 调用判断胜负函数
+                        if not is_win(board):
+                            #break
+                            running = False
+           #pygame.time.delay(1000)            
 
     pygame.time.delay(10000)
     pygame.quit()
