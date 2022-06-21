@@ -100,6 +100,15 @@ class RenjuBoard(object):
         text_a_score = score_font.render(str(self.team_score[0]), False, (0, 0, 0))
         screen.blit(text_a_score, (680,50))
 
+        #team_a chess
+        ccolor = black_color \
+            if self.black_team == 0 else white_color
+        pygame.draw.circle(screen, ccolor, [780,230], 25, 0)
+        #team_b chess
+        ccolor = black_color \
+            if self.black_team == 1 else white_color
+        pygame.draw.circle(screen, ccolor, [780,400], 25, 0)
+
 
 
  
