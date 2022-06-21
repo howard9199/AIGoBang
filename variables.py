@@ -1,4 +1,4 @@
-BOARDSIZE = 9
+BOARDSIZE = 15
 #stones
 EMPTY = 0
 BLACK = 1
