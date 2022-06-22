@@ -293,7 +293,7 @@ def main():
     set_count = 0
 
     if mode == 1 or mode == 3:
-        while set_count < total_set:
+        while set_count < total_set:  
             running = True
             is_black = True
             if set_count % 2 == 0:
@@ -302,18 +302,18 @@ def main():
             else:
                 board.reset_to(prevInit)
             board.switch()
-
+            
+            screen.fill([230, 169, 37])
+            board.draw(screen,EMPTY)
+            pygame.display.flip()
+            pygame.time.delay(2000)
+            
             while running:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         running = False
 
-                # bug: it will print the first black stone without delay if initial board is not empty
-                screen.fill([230, 169, 37])
-                board.draw(screen,EMPTY)
-                pygame.display.flip()
-                pygame.time.delay(time_delay)            
-                pygame.display.flip()
+                pygame.time.delay(time_delay)
 
                 if is_black:
                     if board.black_team == 0:
@@ -333,16 +333,19 @@ def main():
                         board.one_step[not board.black_team] += 1
 
                 is_black = not is_black
+
                 screen.fill([230, 169, 37])
                 board.draw(screen,EMPTY)
                 pygame.display.flip()
+
                 status = is_win(board)
                 if status > 0:
+                    pygame.time.delay(2000)
                     board.gain_point(status)
                     running = False
 
             set_count += 1
-            if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1]:
+            if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
                 total_set += 2
 
     elif mode is 2:
@@ -351,6 +354,8 @@ def main():
         board.reset(0)
         while running:
             for event in pygame.event.get():
+
+                row, col = -1, -1
                 if event.type == pygame.QUIT:
                     running = False
 
@@ -360,29 +365,28 @@ def main():
                     else:
                         row,col = modB.user(board._board,2)
                     print(f'row: {row}, col: {col}')
-                    if not board.move(row, col, is_black):
-                        print("Invalid index.")
-                        exit()
-                    is_black = not is_black
-                    screen.fill([230, 169, 37])
-                    board.draw(screen,EMPTY)
-                    pygame.display.flip()
-                    if is_win(board):
-                        running = False
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    x, y = event.pos  
-                    row = round((y - 40) / 40)     
+                    x, y = event.pos
+                    row = round((y - 40) / 40)
                     col = round((x - 40) / 40)
-                    if not board.move(row, col, is_black):
-                        print("Invalid index.")
-                        exit()
-                    is_black = not is_black
-                    screen.fill([230, 169, 37])
-                    board.draw(screen,EMPTY)
-                    pygame.display.flip()
-                    if is_win(board):
-                        running = False
+
+                else:
+                    continue
+                
+                if not board.move(row, col, is_black):
+                    print("Invalid index.")
+                    #for event in pygame.event.get():
+                    #    if event.type == pygame.KEYDOWN:
+                    exit()
+                
+                is_black = not is_black
+                screen.fill([230, 169, 37])
+                board.draw(screen,EMPTY)
+                pygame.display.flip()
+                if is_win(board):
+                    pygame.delay(3000)
+                    running = False
 
     screen.fill([230, 169, 37])
     board.draw(screen,EMPTY)
