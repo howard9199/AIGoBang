@@ -1,5 +1,9 @@
+from cProfile import run
 from game_set import *
 from queue import Empty
+from time import perf_counter
+from subprocess import check_output, CalledProcessError, TimeoutExpired
+import sys
 import pygame
 import time
 import random
@@ -49,9 +53,9 @@ class RenjuBoard(object):
         for row in range(len(self._board)):
             self._board[row] = [EMPTY] * 15
         for i in range(numStone):
-            r, c = random.randint(0, 15-1), random.randint(0, 15-1)
+            r, c = random.randint(3, 15-4), random.randint(3, 15-4)
             while not self.move(r, c, i%2 == 0):
-                r, c = random.randint(0, 15-1), random.randint(0, 15-1)
+                r, c = random.randint(3, 15-4), random.randint(3, 15-4)
 
     def reset_to(self, board):
         self.one_step[0] = 0
@@ -83,7 +87,7 @@ class RenjuBoard(object):
             self.team_score[not self.black_team] += 1
             self.team_step[not self.black_team] += self.one_step[not self.black_team]
 
-    def draw(self, screen, winner):
+    def draw(self, screen, winner, now_turn):
         for h in range(1, 16):
             pygame.draw.line(screen, black_color,
                              [40, h * 40], [600, h * 40], 1)
@@ -127,7 +131,7 @@ class RenjuBoard(object):
         text_b_name = my_font.render(self.team_name[1], False, (0, 0, 0))
         screen.blit(text_b_name, (650,370))
         text_b_score = score_font.render(str(self.team_score[1]), False, (0, 0, 0))
-        screen.blit(text_b_score, (680,480))
+        screen.blit(text_b_score, (680,460))
 
         #team_a chess
         ccolor = black_color \
@@ -144,8 +148,27 @@ class RenjuBoard(object):
         text_b_score = step_font.render("Win Step:"+str(self.team_step[1]), False, (0, 0, 0))
         screen.blit(text_b_score, (680,420))
 
+        #show present team 780 230
+        if (self.black_team == 0 and now_turn == True) or (self.black_team == 1 and now_turn == False):
+            pygame.draw.circle(screen, [255,0,0], [780,230], 10, 0)
+        else:
+            pygame.draw.circle(screen, [255,0,0], [780,390], 10, 0)
+
+    def draw_now(self, row, col):
+        pygame.draw.circle(screen, [255,0,0], [40 * (col + 1), 40 * (row + 1)], 10, 0)
 
 
+def UI_win(winner):
+    if winner is BLACK:
+        text_surface = my_font.render('Black Win', False, (255, 255, 255),(0, 0, 0))
+        screen.blit(text_surface, (655,300))
+        pygame.display.flip()
+        print('黑棋勝')
+    elif winner is WHITE:
+        text_surface = my_font.render('White Win', False, (0, 0, 0),(255, 255, 255))
+        screen.blit(text_surface, (655,300))
+        pygame.display.flip()
+        print('白棋勝')
  
 
 def is_win(board):
@@ -157,10 +180,6 @@ def is_win(board):
             if b[n] == 1:
                 flag += 1
                 if flag == 5:
-                    text_surface = my_font.render('Black Win', False, (0, 0, 0),(0, 255, 0))
-                    screen.blit(text_surface, (255,300))
-                    pygame.display.flip()
-                    print('黑棋勝')
                     return BLACK
             else:
                 flag = 0
@@ -170,10 +189,6 @@ def is_win(board):
             if b[n] == 2:
                 flag += 1
                 if flag == 5:
-                    text_surface = my_font.render('White Win', False, (0, 0, 0),(0, 255, 0))
-                    screen.blit(text_surface, (255,300))
-                    pygame.display.flip()
-                    print('白棋勝')
                     return WHITE
             else:
                 flag = 0
@@ -183,10 +198,6 @@ def is_win(board):
             if b == 1:
                 flag += 1
                 if flag == 5:
-                    text_surface = my_font.render('Black Win', False, (0, 0, 0),(0, 255, 0))
-                    screen.blit(text_surface, (255,300))
-                    pygame.display.flip()
-                    print('黑棋勝')
                     return BLACK
             else:
                 flag = 0
@@ -196,10 +207,6 @@ def is_win(board):
             if b == 2:
                 flag += 1
                 if flag == 5:
-                    text_surface = my_font.render('White Win', False, (0, 0, 0),(0, 255, 0))
-                    screen.blit(text_surface, (255,300))
-                    pygame.display.flip()
-                    print('白棋勝')
                     return WHITE
             else:
                 flag = 0
@@ -210,10 +217,6 @@ def is_win(board):
                 if 14 >= x - i >= 0 and b[x - i] == 1:
                     flag += 1
                     if flag == 5:
-                        text_surface = my_font.render('Black Win', False, (0, 0, 0),(0, 255, 0))
-                        screen.blit(text_surface, (255,300))
-                        pygame.display.flip()
-                        print('黑棋勝')
                         return BLACK
                 else:
                     flag = 0
@@ -224,10 +227,6 @@ def is_win(board):
                 if 14 >= x - i >= 0 and b[x - i] == 2:
                     flag += 1
                     if flag == 5:
-                        text_surface = my_font.render('White Win', False, (0, 0, 0),(0, 255, 0))
-                        screen.blit(text_surface, (255,300))
-                        pygame.display.flip()
-                        print('白棋勝')
                         return WHITE
                 else:
                     flag = 0
@@ -238,10 +237,6 @@ def is_win(board):
                 if 0 <= x + i <= 14 and b[x + i] == 1:
                     flag += 1
                     if flag == 5:
-                        text_surface = my_font.render('Black Win', False, (0, 0, 0),(0, 255, 0))
-                        screen.blit(text_surface, (255,300))
-                        pygame.display.flip()
-                        print('黑棋勝')
                         return BLACK
                 else:
                     flag = 0
@@ -252,17 +247,15 @@ def is_win(board):
                 if 0 <= x + i <= 14 and b[x + i] == 2:
                     flag += 1
                     if flag == 5:
-                        text_surface = my_font.render('White Win', False, (0, 0, 0),(0, 255, 0))
-                        screen.blit(text_surface, (255,300))
-                        pygame.display.flip()
-                        print('白棋勝')
                         return WHITE
                 else:
                     flag = 0
- 
-    return EMPTY
- 
- 
+    for i in range(15):
+        for j in range(15):
+            if board._board[i][j] == EMPTY:
+                return EMPTY
+    return WHITE
+
 def main():
     team_a_name = team_a
     team_b_name = team_b
@@ -270,8 +263,8 @@ def main():
         team_b_name = team_a_name
         print("測試模式說明：")
         print("每一步棋皆等待玩家操作，若按下空白鍵，則由程式下出下一手，若用滑鼠點按則可直接下下一手棋。")
-    modA = __import__(team_a_name)
-    modB = __import__(team_b_name)
+    # modA = __import__(team_a_name)
+    # modB = __import__(team_b_name)
 
     board = RenjuBoard()
     board.team_name[0] = team_a_name
@@ -283,7 +276,7 @@ def main():
     pygame.display.set_caption('GoBang')
 
     screen.fill([230, 169, 37])
-    board.draw(screen,EMPTY) 
+    board.draw(screen,EMPTY,True) 
     pygame.display.flip()
 
     total_set = 1
@@ -295,7 +288,7 @@ def main():
     if mode == 1 or mode == 3:
         while set_count < total_set:  
             running = True
-            is_black = True
+            is_black = False
             if set_count % 2 == 0:
                 board.reset( 2 * (set_count//2) )
                 prevInit = copy.deepcopy(board._board)
@@ -304,45 +297,90 @@ def main():
             board.switch()
             
             screen.fill([230, 169, 37])
-            board.draw(screen,EMPTY)
+            board.draw(screen,EMPTY,is_black)
             pygame.display.flip()
             pygame.time.delay(2000)
             
             while running:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        running = False
-
-                pygame.time.delay(time_delay)
-
-                if is_black:
-                    if board.black_team == 0:
-                        row,col = modA.user(board._board,1)
-                    else:
-                        row,col = modB.user(board._board,1)
-                    print(row,col)
-                    if board.move(row, col, is_black):
-                        board.one_step[board.black_team] += 1
-                else:
-                    if board.black_team == 0:
-                        row,col = modB.user(board._board,2)
-                    else:
-                        row,col = modA.user(board._board,2)
-                    print(row,col)
-                    if board.move(row, col, is_black):
-                        board.one_step[not board.black_team] += 1
-
+                        pygame.quit()
+                        return None
+                
                 is_black = not is_black
-
                 screen.fill([230, 169, 37])
-                board.draw(screen,EMPTY)
+                board.draw(screen,EMPTY,is_black)
                 pygame.display.flip()
 
-                status = is_win(board)
+                start = perf_counter()
+                if is_black:
+                    if board.black_team == 0:
+                        # row,col = modA.user(const(board._board),1)
+                        try:
+                            result = check_output('py '+team_a_name+'.py', input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = [ int(num) for num in result]
+                            row = result[0]
+                            col = result[1]
+                        except:
+                            print('TIME LIMIT EXCEEDED(超時)')
+                            running = False
+                        # print(result)
+                    else:
+                        try:
+                            result = check_output('py '+team_b_name+'.py', input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            #print(result)
+                            result = [ int(num) for num in result]
+                            row = result[0]
+                            col = result[1]
+                        except:
+                            print('TIME LIMIT EXCEEDED(超時)')
+                            running = False
+                    if running and board.move(row, col, is_black):
+                        board.one_step[board.black_team] += 1
+                    else:
+                        status = WHITE
+                        running = False
+                else:
+                    if board.black_team == 0:
+                        try:
+                            result = check_output('py '+team_a_name+'.py', shell=True,input= str(str(board._board)+', '+str(WHITE)),encoding='ascii',timeout=3).split()
+                            result = [ int(num) for num in result]
+                            row = result[0]
+                            col = result[1]
+                        except:
+                            print('TIME LIMIT EXCEEDED(超時)')
+                            running = False
+                    else:
+                        try:
+                            result = check_output('py '+team_b_name+'.py', shell=True,input= str(str(board._board)+', '+str(WHITE)),encoding='ascii',timeout=3).split()
+                            result = [ int(num) for num in result]
+                            row = result[0]
+                            col = result[1]
+                        except:
+                            print('TIME LIMIT EXCEEDED(超時)')
+                            running = False
+                    if running and board.move(row, col, is_black):
+                        board.one_step[not board.black_team] += 1
+                    else:
+                        status = BLACK
+                        running = False
+                end = perf_counter()
+
+                screen.fill([230, 169, 37])
+                board.draw(screen,EMPTY,is_black)
+                if running:
+                    board.draw_now(row,col)
+                pygame.display.flip()
+                pygame.time.delay(int(time_delay-(end-start)*1000 if (time_delay-(end-start)*1000 > 0) else 0))
+
+                if running:
+                    status = is_win(board)
                 if status > 0:
+                    UI_win(status)
                     pygame.time.delay(2000)
                     board.gain_point(status)
                     running = False
+
 
             set_count += 1
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
@@ -357,14 +395,32 @@ def main():
 
                 row, col = -1, -1
                 if event.type == pygame.QUIT:
-                    running = False
+                    pygame.quit()
+                    return None
 
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     if is_black:
-                        row,col = modA.user(board._board,1)
+                        try:
+                            result = check_output('py '+team_a_name+'.py', input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = [ int(num) for num in result]
+                            row = result[0]
+                            col = result[1]
+                        except:
+                            print('TIME LIMIT EXCEEDED(超時)')
+                            status = WHITE
+                            running = False
                     else:
-                        row,col = modB.user(board._board,2)
-                    print(f'row: {row}, col: {col}')
+                        try:
+                            result = check_output('py '+team_b_name+'.py', shell=True,input= str(str(board._board)+', '+str(WHITE)),encoding='ascii',timeout=3).split()
+                            result = [ int(num) for num in result]
+                            row = result[0]
+                            col = result[1]
+                        except:
+                            print('TIME LIMIT EXCEEDED(超時)')
+                            status = BLACK
+                            running = False
+                    if running:
+                        print(f'row: {row}, col: {col}')
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     x, y = event.pos
@@ -378,18 +434,23 @@ def main():
                     print("Invalid index.")
                     #for event in pygame.event.get():
                     #    if event.type == pygame.KEYDOWN:
-                    exit()
+                    status = 2 - (not is_black)
+                    running = False
                 
                 is_black = not is_black
                 screen.fill([230, 169, 37])
-                board.draw(screen,EMPTY)
+                board.draw(screen,EMPTY,is_black)
                 pygame.display.flip()
-                if is_win(board):
-                    pygame.delay(3000)
+                if running:
+                    status = is_win(board)
+                if status > 0:
+                    UI_win(status)
+                    pygame.time.delay(2000)
+                    board.gain_point(status)
                     running = False
 
     screen.fill([230, 169, 37])
-    board.draw(screen,EMPTY)
+    board.draw(screen,EMPTY,is_black)
     pygame.display.flip()
 
     if(board.team_score[0] > board.team_score[1]):
