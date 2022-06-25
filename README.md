@@ -17,4 +17,4 @@ pip install pygame
 實用函式: `simplelib.py`  
 常數: `variables.py`  
 ## Execute
-請先於`game_set.py`進行設定後，執行`py main.py`
+請先於`game_set.py`進行設定後，執行`python3 main.py`
