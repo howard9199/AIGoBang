@@ -19,3 +19,11 @@ pip3 install pygame
 ## Execute
 請先於`game_set.py`進行設定後，執行`python3 main.py`。  
 注意! 一定要裝python3，否則系統無法執行你的程式
+## 競賽系統功能與特色:
+1. 滑鼠vs電腦的測試模式(mode=2)
+2. 競賽模式(mode=3)
+3. 顯示現在下的棋位置
+4. TIME LIMIT EXCEEDED時砍掉程式
+5. 可供調整的game_set.py
+6. subprocess?
+7. (開發中)小組賽自動配對與競賽
