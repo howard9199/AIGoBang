@@ -1,7 +1,8 @@
-from variables import *
-from simplelib import *
-import re
 import sys
+sys.path.append(f'{sys.path[0]}/..')
+from simplelib import *
+from variables import *
+import re
 
 def user(board,myStone):
   score = [[0 for j in range(BOARDSIZE)] for i in range(BOARDSIZE)]

@@ -14,8 +14,8 @@ requirement:
 
 如果你輸入"userA"，則檔名也必須是userA.py
 '''
-team_a = "random_user"
-team_b = "random_user"
+team_a = "group0/random_user.py"
+team_b = "group0/userA.py"
 
 '''
 time delay between each step (unit: ms)

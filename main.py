@@ -312,12 +312,14 @@ def main():
                 board.draw(screen,EMPTY,is_black)
                 pygame.display.flip()
 
+                #color = BLACK if is_black else WHITE
+                #team = board.black_team if is_black else not board.black_team
+
                 start = perf_counter()
                 if is_black:
                     if board.black_team == 0:
-                        # row,col = modA.user(const(board._board),1)
                         try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
@@ -328,7 +330,7 @@ def main():
                         # print(result)
                     else:
                         try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             #print(result)
                             result = [ int(num) for num in result]
                             row = result[0]
@@ -345,7 +347,7 @@ def main():
                 else:
                     if board.black_team == 0:
                         try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
@@ -355,7 +357,7 @@ def main():
                             running = False
                     else:
                         try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
@@ -405,7 +407,7 @@ def main():
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     if is_black:
                         try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
@@ -415,7 +417,7 @@ def main():
                             running = False
                     else:
                         try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
