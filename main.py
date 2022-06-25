@@ -49,9 +49,9 @@ class RenjuBoard(object):
         for row in range(len(self._board)):
             self._board[row] = [EMPTY] * 15
         for i in range(numStone):
-            r, c = random.randint(0, 15-1), random.randint(0, 15-1)
+            r, c = random.randint(3, 15-4), random.randint(3, 15-4)
             while not self.move(r, c, i%2 == 0):
-                r, c = random.randint(0, 15-1), random.randint(0, 15-1)
+                r, c = random.randint(3, 15-4), random.randint(3, 15-4)
 
     def reset_to(self, board):
         self.one_step[0] = 0
@@ -145,8 +145,6 @@ class RenjuBoard(object):
         screen.blit(text_b_score, (680,420))
 
 
-
- 
 
 def is_win(board):
     for n in range(15):
@@ -311,26 +309,20 @@ def main():
             while running:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
-                        running = False
+                        pygame.quit()
+                        return None
 
                 pygame.time.delay(time_delay)
 
-                if is_black:
-                    if board.black_team == 0:
-                        row,col = modA.user(board._board,1)
-                    else:
-                        row,col = modB.user(board._board,1)
-                    print(row,col)
-                    if board.move(row, col, is_black):
-                        board.one_step[board.black_team] += 1
+                color = BLACK if is_black else WHITE
+                team = board.black_team if is_black else not board.black_team
+                if team == 0:
+                    row,col = modA.user(board._board,color)
                 else:
-                    if board.black_team == 0:
-                        row,col = modB.user(board._board,2)
-                    else:
-                        row,col = modA.user(board._board,2)
-                    print(row,col)
-                    if board.move(row, col, is_black):
-                        board.one_step[not board.black_team] += 1
+                    row,col = modB.user(board._board,color)
+                print(row,col)
+                if board.move(row, col, is_black):
+                    board.one_step[team] += 1
 
                 is_black = not is_black
 
@@ -357,13 +349,16 @@ def main():
 
                 row, col = -1, -1
                 if event.type == pygame.QUIT:
-                    running = False
+                    pygame.quit()
+                    return None
+
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     if is_black:
                         row,col = modA.user(board._board,1)
                     else:
                         row,col = modB.user(board._board,2)
                     print(f'row: {row}, col: {col}')
+
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     x, y = event.pos
                     row = round((y - 40) / 40)
@@ -381,7 +376,7 @@ def main():
                 board.draw(screen,EMPTY)
                 pygame.display.flip()
                 if is_win(board):
-                    pygame.delay(3000)
+                    pygame.time.wait(3000)
                     running = False
 
     screen.fill([230, 169, 37])

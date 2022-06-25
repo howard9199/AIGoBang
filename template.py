@@ -1,7 +1,7 @@
 from variables import *
 from simplelib import *
 
-def main(board,myStone):
+def user(board,myStone):
   score = [[0 for j in range(BOARDSIZE)] for i in range(BOARDSIZE)]
   for i in range(BOARDSIZE):
     for j in range(BOARDSIZE):

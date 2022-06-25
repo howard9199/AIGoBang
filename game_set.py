@@ -3,7 +3,8 @@
 2. test mode
 3. competition mode
 '''
-mode = 2
+
+mode = 3
 
 '''
 requirement:
@@ -13,8 +14,8 @@ requirement:
 
 如果你輸入"userA"，則檔名也必須是userA.py
 '''
-team_a = "user"
-team_b = "user"
+team_a = "random_user"
+team_b = "random_user"
 
 '''
 time delay between each step (unit: ms)
