@@ -32,6 +32,12 @@ b_team_color = [247, 206, 92]
 losser_color = [202, 203, 207]
 winner_color = [110, 250, 95]
 
+# sound
+if sound_activate:
+    pygame.mixer.init()
+    stone_sound = pygame.mixer.Sound('stone_sound1.wav')
+    wrong_sound = pygame.mixer.Sound('wrong_sound.wav')
+
  
 
 class RenjuBoard(object):
@@ -77,6 +83,9 @@ class RenjuBoard(object):
         if self.isValid(row, col):
             self._board[row][col] = BLACK if is_black else WHITE
             return True
+        if sound_activate:
+            pygame.mixer.music.stop()
+            pygame.mixer.Sound.play(wrong_sound)
         return False
 
     def gain_point(self, win_team):
@@ -257,10 +266,11 @@ def is_win(board):
     return WHITE
 
 def main():
-    team_a_name = team_a
-    team_b_name = team_b
+    team_a_name = team_a_path[team_a_path.rfind('/')+1:team_a_path.rfind('.')]
+    team_b_name = team_b_path[team_b_path.rfind('/')+1:team_b_path.rfind('.')]
     if mode == 2:
-        team_b_name = team_a_name
+        #team_b_name = team_a_name
+        #team_b_path = team_a_path
         print("測試模式說明：")
         print("每一步棋皆等待玩家操作，若按下空白鍵，則由程式下出下一手，若用滑鼠點按則可直接下下一手棋。")
     # modA = __import__(team_a_name)
@@ -312,81 +322,51 @@ def main():
                 board.draw(screen,EMPTY,is_black)
                 pygame.display.flip()
 
-                #color = BLACK if is_black else WHITE
-                #team = board.black_team if is_black else not board.black_team
+                color = BLACK if is_black else WHITE
+                team_idx = board.black_team if is_black else not board.black_team
+                team_path = team_a_path if team_idx == 0 else team_b_path
 
                 start = perf_counter()
-                if is_black:
-                    if board.black_team == 0:
-                        try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-                            result = [ int(num) for num in result]
-                            row = result[0]
-                            col = result[1]
-                        except Exception as err:
-                            print(err)
-                            print('TIME LIMIT EXCEEDED(超時)')
-                            running = False
-                        # print(result)
-                    else:
-                        try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-                            #print(result)
-                            result = [ int(num) for num in result]
-                            row = result[0]
-                            col = result[1]
-                        except Exception as err:
-                            print(err)
-                            print('TIME LIMIT EXCEEDED(超時)')
-                            running = False
-                    if running and board.move(row, col, is_black):
-                        board.one_step[board.black_team] += 1
-                    else:
-                        status = WHITE
-                        running = False
+                try:
+                    result = check_output(f'python3 {sys.path[0]}/{team_path}', shell=True, input= str(str(board._board)+', '+str(color)),encoding='ascii',timeout=3).split()
+                    result = [int(num) for num in result]
+                    row = result[0]
+                    col = result[1]
+                except subprocess.TimeoutExpired:
+                    print('TIME LIMIT EXCEEDED(超時)')
+                    running = False
+                except Exception as err:
+                    print(err)
+                    pygame.quit()
+                    exit()
+                
+                if running and board.move(row, col, is_black):
+                    board.one_step[team_idx] += 1
                 else:
-                    if board.black_team == 0:
-                        try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-                            result = [ int(num) for num in result]
-                            row = result[0]
-                            col = result[1]
-                        except Exception as err:
-                            print(err)
-                            print('TIME LIMIT EXCEEDED(超時)')
-                            running = False
-                    else:
-                        try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-                            result = [ int(num) for num in result]
-                            row = result[0]
-                            col = result[1]
-                        except Exception as err:
-                            print(err)
-                            print('TIME LIMIT EXCEEDED(超時)')
-                            running = False
-                    if running and board.move(row, col, is_black):
-                        board.one_step[not board.black_team] += 1
-                    else:
-                        status = BLACK
-                        running = False
+                    status = 3-color
+                    running = False
                 end = perf_counter()
 
                 screen.fill([230, 169, 37])
                 board.draw(screen,EMPTY,is_black)
                 if running:
+                    if sound_activate:
+                        pygame.mixer.music.stop()
+                        pygame.mixer.Sound.play(stone_sound)
                     board.draw_now(row,col)
                 pygame.display.flip()
-                pygame.time.delay(int(time_delay-(end-start)*1000 if (time_delay-(end-start)*1000 > 0) else 0))
+
+                real_delay = int(time_delay-(end-start)*1000)
+                if real_delay < 0: real_delay = 0
+                pygame.time.wait(200+real_delay)
 
                 if running:
                     status = is_win(board)
                 if status > 0:
                     UI_win(status)
-                    pygame.time.delay(2000)
+                    pygame.time.delay(set_delay)
                     board.gain_point(status)
                     running = False
-
 
             set_count += 1
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
@@ -398,52 +378,44 @@ def main():
         board.reset(0)
         while running:
             for event in pygame.event.get():
-
                 row, col = -1, -1
+                color = BLACK if is_black else WHITE
+
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return None
 
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                    if is_black:
-                        try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-                            result = [ int(num) for num in result]
-                            row = result[0]
-                            col = result[1]
-                        except:
-                            print('TIME LIMIT EXCEEDED(超時)')
-                            status = WHITE
-                            running = False
-                    else:
-                        try:
-                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-                            result = [ int(num) for num in result]
-                            row = result[0]
-                            col = result[1]
-                        except:
-                            print('TIME LIMIT EXCEEDED(超時)')
-                            status = BLACK
-                            running = False
-                    if running:
-                        print(f'row: {row}, col: {col}')
+                    team_path = team_a_path if is_black else team_b_path
+                    start = perf_counter()
+                    try:
+                        result = check_output(f'python3 {sys.path[0]}/{team_path}', shell=True, input= str(str(board._board)+', '+str(color)),encoding='ascii',timeout=3).split()
+                        result = [int(num) for num in result]
+                        row = result[0]
+                        col = result[1]
+                    except subprocess.TimeoutExpired:
+                        print('TIME LIMIT EXCEEDED(超時)')
+                        running = False
+                    except Exception as err:
+                        print(err)
+                        pygame.quit()
+                        exit()
+                    end = perf_counter()
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     x, y = event.pos
                     row = round((y - 40) / 40)
                     col = round((x - 40) / 40)
-
                 else:
                     continue
                 
-                if not board.move(row, col, is_black):
-                    print("Invalid index.")
-                    #for event in pygame.event.get():
-                    #    if event.type == pygame.KEYDOWN:
-                    status = 2 - (not is_black)
+                if running and board.move(row, col, is_black):
+                    board.one_step[0 if is_black else 1] += 1
+                else:
+                    print(f'Invalid index: {row}, {col}')
+                    status = 3-color
                     running = False
                 
-                is_black = not is_black
                 screen.fill([230, 169, 37])
                 board.draw(screen,EMPTY,is_black)
                 pygame.display.flip()
@@ -451,24 +423,25 @@ def main():
                     status = is_win(board)
                 if status > 0:
                     UI_win(status)
-                    pygame.time.delay(2000)
+                    pygame.time.delay(set_delay)
                     board.gain_point(status)
                     running = False
+                is_black = not is_black
 
     screen.fill([230, 169, 37])
     board.draw(screen,EMPTY,is_black)
     pygame.display.flip()
 
     if(board.team_score[0] > board.team_score[1]):
-        board.draw(screen,1)
+        board.draw(screen,1,is_black)
     elif(board.team_score[0] < board.team_score[1]):
-        board.draw(screen,2)
+        board.draw(screen,2,is_black)
     elif(board.team_step[0] < board.team_step[1]):
-        board.draw(screen,1)
+        board.draw(screen,1,is_black)
     elif(board.team_step[0] > board.team_step[1]):
-        board.draw(screen,2)
+        board.draw(screen,2,is_black)
     else:
-        board.draw(screen,0)
+        board.draw(screen,0,is_black)
     pygame.display.flip()
     
     running = True
