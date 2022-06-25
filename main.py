@@ -346,7 +346,6 @@ def main():
                     if board.black_team == 0:
                         try:
                             result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
-
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
