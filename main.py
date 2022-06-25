@@ -375,7 +375,7 @@ def main():
                 if running:
                     board.draw_now(row,col)
                 pygame.display.flip()
-                pygame.time.delay(int(time_delay-(end-start)*1000 if (time_delay-(end-start)*1000 > 0) else 0))
+                pygame.time.delay(200+int(time_delay-(end-start)*1000 if (time_delay-(end-start)*1000 > 0) else 0))
 
                 if running:
                     status = is_win(board)
