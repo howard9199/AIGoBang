@@ -317,22 +317,24 @@ def main():
                     if board.black_team == 0:
                         # row,col = modA.user(const(board._board),1)
                         try:
-                            result = check_output('py '+team_a_name+'.py', input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
-                        except:
+                        except Exception as err:
+                            print(err)
                             print('TIME LIMIT EXCEEDED(超時)')
                             running = False
                         # print(result)
                     else:
                         try:
-                            result = check_output('py '+team_b_name+'.py', input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             #print(result)
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
-                        except:
+                        except Exception as err:
+                            print(err)
                             print('TIME LIMIT EXCEEDED(超時)')
                             running = False
                     if running and board.move(row, col, is_black):
@@ -343,20 +345,23 @@ def main():
                 else:
                     if board.black_team == 0:
                         try:
-                            result = check_output('py '+team_a_name+'.py', shell=True,input= str(str(board._board)+', '+str(WHITE)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
-                        except:
+                        except Exception as err:
+                            print(err)
                             print('TIME LIMIT EXCEEDED(超時)')
                             running = False
                     else:
                         try:
-                            result = check_output('py '+team_b_name+'.py', shell=True,input= str(str(board._board)+', '+str(WHITE)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
-                        except:
+                        except Exception as err:
+                            print(err)
                             print('TIME LIMIT EXCEEDED(超時)')
                             running = False
                     if running and board.move(row, col, is_black):
@@ -401,7 +406,7 @@ def main():
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     if is_black:
                         try:
-                            result = check_output('py '+team_a_name+'.py', input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_a_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
@@ -411,7 +416,7 @@ def main():
                             running = False
                     else:
                         try:
-                            result = check_output('py '+team_b_name+'.py', shell=True,input= str(str(board._board)+', '+str(WHITE)),encoding='ascii',timeout=3).split()
+                            result = check_output(f'python3 {sys.path[0]}/{team_b_name}.py', shell=True, input= str(str(board._board)+', '+str(BLACK)),encoding='ascii',timeout=3).split()
                             result = [ int(num) for num in result]
                             row = result[0]
                             col = result[1]
