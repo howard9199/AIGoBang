@@ -348,7 +348,7 @@ def main():
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
                 total_set += 2
 
-    elif mode is 2:
+    elif mode == 2:
         running = True
         is_black = True
         board.reset(0)
