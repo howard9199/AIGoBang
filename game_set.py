@@ -3,7 +3,7 @@
 2. test mode
 3. competition mode
 '''
-mode = 3
+mode = 2
 
 '''
 requirement:

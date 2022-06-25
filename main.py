@@ -358,26 +358,22 @@ def main():
                 row, col = -1, -1
                 if event.type == pygame.QUIT:
                     running = False
-
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                     if is_black:
                         row,col = modA.user(board._board,1)
                     else:
                         row,col = modB.user(board._board,2)
                     print(f'row: {row}, col: {col}')
-
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     x, y = event.pos
                     row = round((y - 40) / 40)
                     col = round((x - 40) / 40)
-
                 else:
                     continue
                 
                 if not board.move(row, col, is_black):
+                    print(row, col)
                     print("Invalid index.")
-                    #for event in pygame.event.get():
-                    #    if event.type == pygame.KEYDOWN:
                     exit()
                 
                 is_black = not is_black

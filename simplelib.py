@@ -32,3 +32,42 @@ def countChain (board, stone) :
 			if (i != BOARDSIZE-1 and j != 0 and rdiaChain[i][j] and rdiaChain[i+1][j-1]) :
 				rdiaChain[i][j] = rdiaChain[i+1][j-1]
 	return rowChain, colChain, ldiaChain, rdiaChain
+
+
+def peek (board, i , j, stone):
+#def peek( board:list[list[int]], i:int, j:int, stone:int ) -> list[list[int, bool]]
+
+    if i < 0 or i >= BOARDSIZE or j < 0 or j >= BOARDSIZE:
+        print("Invalid index to peek")
+        return None
+
+    ret = [[0, False] for _ in range(8)]
+
+    for k in range(8):
+
+        y = i
+        x = j
+
+        if k == 2 or k == 6 : # horizontal
+            delY = 0
+        else :
+            delY = 1 if k > 2 and k < 6 else -1
+
+        if k == 0 or k == 4 : # vertical
+            delX = 0
+        else :
+            delX = 1 if k > 0 and k < 4 else -1
+
+        while True:
+            y += delY
+            x += delX
+            if y < 0 or y >= BOARDSIZE : break
+            if x < 0 or x >= BOARDSIZE : break
+            if board[y][x] != stone : break
+            ret[k][0] += 1
+
+        if y < 0 or y >= BOARDSIZE : continue
+        if x < 0 or x >= BOARDSIZE : continue
+        ret[k][1] = board[y][x] == EMPTY
+
+    return ret
