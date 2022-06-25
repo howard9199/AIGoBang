@@ -26,4 +26,5 @@ pip3 install pygame
 4. TIME LIMIT EXCEEDED時砍掉程式
 5. 可供調整的game_set.py
 6. subprocess?
-7. (開發中)小組賽自動配對與競賽
+7. 音效(學校電腦聽不到哈哈)
+8. (開發中)小組賽自動配對與競賽
