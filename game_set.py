@@ -3,7 +3,6 @@
 2. test mode
 3. competition mode
 '''
-
 mode = 3
 
 '''
@@ -14,16 +13,23 @@ requirement:
 
 如果你輸入"userA"，則檔名也必須是userA.py
 '''
-team_a = "random_user"
-team_b = "random_user"
+team_a = "template"
+team_b = "template"
 
 '''
 time delay between each step (unit: ms)
 每顆棋之間的延遲時間，單位為毫秒
 '''
-time_delay = 100
+time_delay = 1000
+
 '''
-end delay after game ended (unit: ms)
-結束後畫面停留的時間，單位為毫秒
+time delay between each set (unit: ms)
+每局之間的延遲時間，單位為毫秒
 '''
-end_delay = 5000
+set_delay = 2000
+
+'''
+some reality sound effect
+擬真音效，我知道你用學校電腦聽不到
+'''
+sound_activate = True

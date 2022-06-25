@@ -32,6 +32,12 @@ b_team_color = [247, 206, 92]
 losser_color = [202, 203, 207]
 winner_color = [110, 250, 95]
 
+# sound
+if sound_activate:
+    pygame.mixer.init()
+    stone_sound = pygame.mixer.Sound('stone_sound1.wav')
+    wrong_sound = pygame.mixer.Sound('wrong_sound.wav')
+
  
 
 class RenjuBoard(object):
@@ -77,6 +83,9 @@ class RenjuBoard(object):
         if self.isValid(row, col):
             self._board[row][col] = BLACK if is_black else WHITE
             return True
+        if sound_activate:
+            pygame.mixer.music.stop()
+            pygame.mixer.Sound.play(wrong_sound)
         return False
 
     def gain_point(self, win_team):
@@ -373,6 +382,9 @@ def main():
                 screen.fill([230, 169, 37])
                 board.draw(screen,EMPTY,is_black)
                 if running:
+                    if sound_activate:
+                        pygame.mixer.music.stop()
+                        pygame.mixer.Sound.play(stone_sound)
                     board.draw_now(row,col)
                 pygame.display.flip()
                 pygame.time.delay(200+int(time_delay-(end-start)*1000 if (time_delay-(end-start)*1000 > 0) else 0))
@@ -381,7 +393,7 @@ def main():
                     status = is_win(board)
                 if status > 0:
                     UI_win(status)
-                    pygame.time.delay(2000)
+                    pygame.time.delay(set_delay)
                     board.gain_point(status)
                     running = False
 
@@ -449,7 +461,7 @@ def main():
                     status = is_win(board)
                 if status > 0:
                     UI_win(status)
-                    pygame.time.delay(2000)
+                    pygame.time.delay(set_delay)
                     board.gain_point(status)
                     running = False
 
@@ -458,15 +470,15 @@ def main():
     pygame.display.flip()
 
     if(board.team_score[0] > board.team_score[1]):
-        board.draw(screen,1)
+        board.draw(screen,1,is_black)
     elif(board.team_score[0] < board.team_score[1]):
-        board.draw(screen,2)
+        board.draw(screen,2,is_black)
     elif(board.team_step[0] < board.team_step[1]):
-        board.draw(screen,1)
+        board.draw(screen,1,is_black)
     elif(board.team_step[0] > board.team_step[1]):
-        board.draw(screen,2)
+        board.draw(screen,2,is_black)
     else:
-        board.draw(screen,0)
+        board.draw(screen,0,is_black)
     pygame.display.flip()
     
     running = True
