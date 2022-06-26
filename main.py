@@ -157,6 +157,13 @@ class RenjuBoard(object):
         text_b_score = step_font.render("Win Step:"+str(self.team_step[1]), False, (0, 0, 0))
         screen.blit(text_b_score, (680,420))
 
+        #team_a score info
+        text_a_score = step_font.render("Score:"+str(678-self.team_step[0]-self.team_score[1]*113), False, (0, 0, 0))
+        screen.blit(text_a_score, (680,40))
+        #team_b score info
+        text_b_score = step_font.render("Score:"+str(678-self.team_step[1]-self.team_score[0]*113), False, (0, 0, 0))
+        screen.blit(text_b_score, (680,440))
+
         #show present team 780 230
         if (self.black_team == 0 and now_turn == True) or (self.black_team == 1 and now_turn == False):
             pygame.draw.circle(screen, [255,0,0], [780,230], 10, 0)
