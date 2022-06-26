@@ -332,7 +332,7 @@ def main():
                     result = [int(num) for num in result]
                     row = result[0]
                     col = result[1]
-                except subprocess.TimeoutExpired:
+                except TimeoutExpired:
                     print('TIME LIMIT EXCEEDED(超時)')
                     running = False
                 except Exception as err:
@@ -393,7 +393,7 @@ def main():
                         result = [int(num) for num in result]
                         row = result[0]
                         col = result[1]
-                    except subprocess.TimeoutExpired:
+                    except TimeoutExpired:
                         print('TIME LIMIT EXCEEDED(超時)')
                         running = False
                     except Exception as err:
