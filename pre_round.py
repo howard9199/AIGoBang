@@ -15,10 +15,12 @@ for i, f1 in enumerate(files):
         f2 = files[j]
         counter += 1
         print(f'round {counter}: {f1} vs {f2}')
-        os.system(f'echo \'mode = 3\' > {setting}')
-        os.system(f'echo \"team_a_path = \'{dirName}/{f1}\'\" >> {setting}')
-        os.system(f'echo \"team_b_path = \'{dirName}/{f2}\'\" >> {setting}')
-        os.system(f'echo \'time_delay = 500\' >> {setting}')
-        os.system(f'echo \'set_delay = 2000\' >> {setting}')
-        os.system(f'echo \'sound_activate = False\' >> {setting}')
+        fo = open(f'{setting}', 'w')
+        fo.write('mode = 3\n')
+        fo.write(f'team_a_path = \'{dirName}/{f1}\'\n')
+        fo.write(f'team_b_path = \'{dirName}/{f2}\'\n')
+        fo.write('time_delay = 500\n')
+        fo.write('set_delay = 2000\n')
+        fo.write('sound_activate = False\n')
+        fo.close()
         os.system(f'python3 main.py')

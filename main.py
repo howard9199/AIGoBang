@@ -8,7 +8,7 @@ import pygame
 import time
 import random
 import copy
-print(pygame.ver)
+#print(pygame.ver)
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)

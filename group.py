@@ -1,5 +1,6 @@
 from time import perf_counter
 from subprocess import check_output
+import shutil
 import subprocess
 import os
 import sys
@@ -52,8 +53,15 @@ times, files = zip(*sorted(zip(times, files)))
 
 groups = (len(files)-1) // 4 + 1
 for g in range(groups):
-    os.system(f'mkdir -p group{g}')
-    os.system(f'rm -f group{g}/*')
+    try:
+        os.mkdir(f'group{g}')
+    except FileExistsError:
+        pass
+    except Exception as e:
+        print(e)
+    for f in os.listdir(f'group{g}'):
+        os.remove(f'group{g}/{f}')
 
 for i, name in enumerate(files):
-    os.system(f'cp {sys.path[0]}/{dirName}/{name} group{i%groups}/')
+    shutil.copyfile(f'{dirName}/{name}', f'group{i%groups}/{name}')
+    #os.system(f'cp {sys.path[0]}/{dirName}/{name} group{i%groups}/')
