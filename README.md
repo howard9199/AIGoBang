@@ -14,11 +14,11 @@ Python3
 Live Share VSCode Extension (for NTNUCSIE Camp only)  
 pip3 install pygame
 ## Intro
-Competition System: `main.py`  
+Competition System: `main.py`(DO NOT EDIT)  
 Setting Competition System: `game_set.py`  
 Template: `template.py`  
-Useful functions: `simplelib.py`  
-Constant: `variables.py`  
+Useful functions: `simplelib.py`(DO NOT EDIT)  
+Constant: `variables.py`(DO NOT EDIT)  
 ## Execute
 Please set up `game_set.py`, and run `python3 main.py`  
 WARNING! The competition system can't execute your code if python3 not installed
@@ -30,4 +30,5 @@ WARNING! The competition system can't execute your code if python3 not installed
 5. Adjustable(using game_set.py)
 6. Subprocess?
 7. Sound effect(Can't hear if you use school computer, haha)
-8. (WIP)Round-robin tournament
+8. Grouping system
+9. (WIP)Round-robin tournament
