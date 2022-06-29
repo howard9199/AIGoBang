@@ -1,6 +1,16 @@
 from variables import *
 import copy
 
+# countChain:
+#
+# param:
+#   board: list[list[int]]
+#   stone: int
+#
+# return: tuple(list[list[int]])
+#   回傳在每個點上該顏色的連續數量，因為連續有四個方向，所以共回傳四個二維陣列
+#   範例請見簡報
+
 def countChain (board, stone) :
 #def countChain( board : list[list[int]], stone : int = BLACK ) -> tuple[ list[list[int]], list[list[int]], list[list[int]], list[list[int]] ] :
 	
@@ -33,6 +43,29 @@ def countChain (board, stone) :
 				rdiaChain[i][j] = rdiaChain[i+1][j-1]
 	return rowChain, colChain, ldiaChain, rdiaChain
 
+# peek:
+#
+# param:
+#   board: list[list[int]]
+#       board.size == board[0].size == BOARDSIZE
+#   (i, j):  (int, int)
+#       0 <= i < BOARDSIZE
+#       0 <= j < BOARDSIZE
+#   stone: int
+#       stone in [EMPTY, BLACK, WHITE]
+#
+# return: list[[int, bool]]
+#   peek(board,i,j,stone).size == 8
+#   從 board[i][j] 往八個方向看，看此方向有連續幾顆 stone 顏色的棋，以及在這些棋子之後是否有空位
+#
+# example:
+#   board =
+#     [[0, 0, 0, 0, 2],
+#      [0, 0, 1, 1, 2],
+#      [0, 1, 1, 1, 1],
+#      [0, 1, 1, 1, 2],
+#      [0, 1, 1, 1, 2]]
+#   peek(board, 2, 2, 1) == [[1, True], [1, False], [2, False], [1, False], [2, False], [1, True], [1, True], [0, True]]
 
 def peek (board, i , j, stone):
 #def peek( board:list[list[int]], i:int, j:int, stone:int ) -> list[list[int, bool]]
