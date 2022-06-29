@@ -10,6 +10,10 @@ import random
 import copy
 #print(pygame.ver)
 
+# 先去看README，這裡你不用改
+# 先去看README，這裡你不用改
+# 先去看README，這裡你不用改
+
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
 score_font = pygame.font.SysFont('Comic Sans MS', 100)

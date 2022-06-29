@@ -4,21 +4,21 @@ from simplelib import *
 from variables import *
 import re
 
+'''
+user:
+    輸入目前的棋盤跟你是黑棋或白棋(1 or 2)
+    回傳你要下的 index: (row, col)
+    param:
+        board: list[list[int]]
+            board.size == board[0].size == BOARDSIZE
+        myStone: int
+            myStone in [EMPTY, BLACK, WHITE] (0, 1, 2)
+    return: row, column
 
-# user:
-#
-# param:
-#   board: list[list[int]]
-#       board.size == board[0].size == BOARDSIZE
-#   myStone: int
-#       myStone in [EMPTY, BLACK, WHITE] (0, 1, 2)
-# return: row, column
-#
-# 根據目前的 board，輪到 myStone，回傳要下的(row, col)。
-# 整個 user 都可以改，除此之外都不要改
-
-# 定義請看 variables.py
-# 輔助函式請看 simplelib.py
+定義請看 variables.py
+輔助函式請看 simplelib.py
+整個 user 都可以改，除此之外都不要改
+'''
 
 def user(board,myStone):
 
