@@ -11,7 +11,7 @@ requirement:
 2. team_a only
 3. both
 
-如果你輸入"userA"，則檔名也必須是userA.py
+請輸入你的程式的路徑，其中檔名的部分會成為隊名
 '''
 team_a_path = 'group0//userB.py'
 team_b_path = 'group0//template.py'
