@@ -35,8 +35,8 @@ winner_color = [110, 250, 95]
 # sound
 if sound_activate:
     pygame.mixer.init()
-    stone_sound = pygame.mixer.Sound('stone_sound1.wav')
-    wrong_sound = pygame.mixer.Sound('wrong_sound.wav')
+    stone_sound = pygame.mixer.Sound('sound/stone_sound1.wav')
+    wrong_sound = pygame.mixer.Sound('sound/wrong_sound.wav')
 
  
 
