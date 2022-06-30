@@ -45,7 +45,7 @@ def user(board,myStone):
         max_score = score[i][j]
         maxi = i
         maxj = j
-  print(maxi, maxj, max_score)
+  print(maxi, maxj, max_score, file=sys.stderr)
   return maxi, maxj
 
 
