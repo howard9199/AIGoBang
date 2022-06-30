@@ -152,11 +152,11 @@ class RenjuBoard(object):
             pygame.draw.rect(screen, winner_color, rectb_filled)        
 
         text_a_name = my_font.render(self.team_name[0], False, (0, 0, 0))
-        screen.blit(text_a_name, (650,210))
+        screen.blit(text_a_name, (620,210))
         text_a_score = score_font.render(str(self.team_score[0]), False, (0, 0, 0))
         screen.blit(text_a_score, (680,50))
         text_b_name = my_font.render(self.team_name[1], False, (0, 0, 0))
-        screen.blit(text_b_name, (650,370))
+        screen.blit(text_b_name, (620,370))
         text_b_score = score_font.render(str(self.team_score[1]), False, (0, 0, 0))
         screen.blit(text_b_score, (680,460))
 
