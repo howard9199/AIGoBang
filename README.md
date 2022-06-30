@@ -7,6 +7,10 @@
 ```
 pip3 install pygame
 ```
+for Windows, it's recommended to
+```
+python3 -m pip install pygame
+```
 ## Eessential Code:
 https://github.com/howard9199/AIGoBang
 ## Pre-install:
