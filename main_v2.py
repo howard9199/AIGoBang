@@ -389,7 +389,7 @@ def main():
                     
                     timer_thread = Thread(target=timer,args =(lambda : stop_threads,board.remain_time[team_idx],my_list,board,is_black,process ))
                     timer_thread.start()
-                    result = process.communicate(input=str(str(board._board)+', '+str(color)),timeout=board.remain_time[team_idx])[0].split()
+                    result = process.communicate(input=str(str(board._board)+', '+str(color)+', '+str(board.remain_time[team_idx])),timeout=board.remain_time[team_idx])[0].split()
                     if len(result) == 0:
                         stop_threads = True
                         running = False
@@ -434,16 +434,18 @@ def main():
                 if running:
                     status = is_win(board)
                 if status > 0:
-                    UI_win(status)
-                    pygame.time.delay(set_delay)
+                    screen.fill([230, 169, 37])
                     board.gain_point(status)
+                    UI_win(status)
+                    board.draw(screen,EMPTY,is_black)
+                    board.draw_now(row,col)
+                    pygame.display.flip()
+                    pygame.time.delay(set_delay)
+                    
                     running = False
             set_count += 1
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
                 total_set += 2
-        for i in range(total_set):
-            screen.fill([230, 169, 37])
-            pygame.display.flip()
 
     elif mode == 2:
         running = True
@@ -472,7 +474,7 @@ def main():
                         
                         timer_thread = Thread(target=timer,args =(lambda : stop_threads,board.remain_time[team_idx],my_list,board,is_black,process ))
                         timer_thread.start()
-                        result = process.communicate(input=str(str(board._board)+', '+str(color)),timeout=board.remain_time[team_idx])[0].split()
+                        result = process.communicate(input=str(str(board._board)+', '+str(color)+', '+str(board.remain_time[team_idx])),timeout=board.remain_time[team_idx])[0].split()
                         if len(result) == 0:
                             stop_threads = True
                             running = False
