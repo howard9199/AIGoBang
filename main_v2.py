@@ -407,6 +407,7 @@ def main():
                     exit()
                 stop_threads = True
                 timer_thread.join()
+                board.remain_time[team_idx] = my_list[0]
                 # result = que.get()
                 # print('remain:',result)
                 
@@ -437,13 +438,11 @@ def main():
                     pygame.time.delay(set_delay)
                     board.gain_point(status)
                     running = False
-            history_board[set_count] = board
             set_count += 1
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
                 total_set += 2
         for i in range(total_set):
             screen.fill([230, 169, 37])
-            history_board[set_count].draw(screen,EMPTY,is_black)
             pygame.display.flip()
 
     elif mode == 2:
