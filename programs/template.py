@@ -6,13 +6,15 @@ import re
 
 '''
 user:
-    輸入目前的棋盤跟你是黑棋或白棋(1 or 2)
+    輸入目前的棋盤跟你是黑棋或白棋(1 or 2)，以及剩餘的時間
     回傳你要下的 index: (row, col)
     param:
         board: list[list[int]]
             board.size == board[0].size == BOARDSIZE
         myStone: int
             myStone in [EMPTY, BLACK, WHITE] (0, 1, 2)
+        remain_time: float
+            remaining time(unit: second)
     return: row, column
 
 定義請看 variables.py
@@ -22,8 +24,7 @@ user:
 NOTE: 若要debug，請使用 print("message", file=sys.stderr)，不要 print 到stdout
 '''
 
-def user(board,myStone):
-
+def user(board,myStone,remain_time):
   score = [[0 for j in range(BOARDSIZE)] for i in range(BOARDSIZE)] # score 儲存每個格子的分數
 
   for i in range(BOARDSIZE):
@@ -64,7 +65,8 @@ def main():
       input_board[i][j] = user_list[i*15+j]
 
   input_mystone = user_list[225]
-  i, j = user(input_board,input_mystone)
+  remain_time = user_list[226]
+  i, j = user(input_board,input_mystone,remain_time)
   print(i,j)
 
 if __name__ == '__main__':
