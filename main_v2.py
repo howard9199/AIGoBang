@@ -76,15 +76,15 @@ class RenjuBoard(object):
             r, c = random.randint(3, 15-4), random.randint(3, 15-4)
             while not self.move(r, c, i%2 == 0):
                 r, c = random.randint(3, 15-4), random.randint(3, 15-4)
-        self.remain_time[0] = 6
-        self.remain_time[1] = 6
+        self.remain_time[0] = 80
+        self.remain_time[1] = 80
 
     def reset_to(self, board):
         self.one_step[0] = 0
         self.one_step[1] = 0
         self._board = board
-        self.remain_time[0] = 6
-        self.remain_time[1] = 6
+        self.remain_time[0] = 80
+        self.remain_time[1] = 80
         
 
     def switch(self):
