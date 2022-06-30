@@ -36,4 +36,4 @@ WARNING! The competition system can't execute your code if python3 not installed
 6. Subprocess?
 7. Sound effect(Can't hear if you use school computer, haha)
 8. Grouping system
-9. (WIP)Round-robin tournament
+9. Round-robin tournament
