@@ -396,7 +396,6 @@ def main():
                     else:
                         stop_threads = True
                         [row, col] = [int(num) for num in result]
-                        print(row,col)
                 except TimeoutExpired:
                     print('TIME LIMIT EXCEEDED(超時)')
                     stop_threads = True
