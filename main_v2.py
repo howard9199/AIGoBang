@@ -440,12 +440,14 @@ def main():
                     board.draw(screen,EMPTY,is_black)
                     board.draw_now(row,col)
                     pygame.display.flip()
-                    pygame.time.delay(set_delay)
+                    
                     
                     running = False
             set_count += 1
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
                 total_set += 2
+            if set_count != total_set:
+                pygame.time.delay(set_delay)
 
     elif mode == 2:
         running = True
