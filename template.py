@@ -4,18 +4,37 @@ from simplelib import *
 from variables import *
 import re
 
+'''
+user:
+    輸入目前的棋盤跟你是黑棋或白棋(1 or 2)，以及剩餘的時間
+    回傳你要下的 index: (row, col)
+    param:
+        board: list[list[int]]
+            board.size == board[0].size == BOARDSIZE
+        myStone: int
+            myStone in [EMPTY, BLACK, WHITE] (0, 1, 2)
+        remain_time: float
+            remaining time(unit: second)
+    return: row, column
+定義請看 variables.py
+輔助函式請看 simplelib.py
+整個 user 都可以改，除此之外都不要改
+NOTE: 若要debug，請使用 print("message", file=sys.stderr)，不要 print 到stdout
+'''
+
 
 def user(board,myStone,remain_time):
-  score = [[0 for j in range(BOARDSIZE)] for i in range(BOARDSIZE)]
+  score = [[0 for j in range(BOARDSIZE)] for i in range(BOARDSIZE)] # score 儲存每個格子的分數
   for i in range(BOARDSIZE):
-    for j in range(BOARDSIZE):
-      if board[i][j] is EMPTY:
-        board[i][j] = myStone
+    for j in range(BOARDSIZE): # 遍例每個格子
+      if board[i][j] is EMPTY: # 對空的格子算分
+        board[i][j] = myStone # 試著下在這格
         '''
         left blank to you
         '''
-        board[i][j] = EMPTY
-
+        board[i][j] = EMPTY # 試完了，拿起來
+  
+  # 取最大分數的格子回傳
   maxi = 0
   maxj = 0
   max_score = -1
@@ -29,7 +48,8 @@ def user(board,myStone,remain_time):
   return maxi, maxj
 
 
-# DO NOT modify code below!
+# DO NOT modify code below!(請絕對不要更改以下程式碼)
+# 也可以不用看
 def main():
   r = re.compile(r"[^, 0-9-]")
   raw_data = input()
@@ -46,8 +66,6 @@ def main():
 
   input_mystone = user_list[225]
   remain_t = user_list[226]
-  # print_to_stderr(input_board)
-  # print('stone:'+str(input_mystone))
   i, j = user(input_board,input_mystone,remain_t)
   print(i,j)
 
