@@ -295,10 +295,12 @@ def timer(stop, remainTime,list,board,is_black,process):
     # sleep_duration = remainTime
     
     while remainTime > 0 and stop() == False:
+        '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return None
+        '''
         # print(f"you have {remainTime} seconds left")
         time.sleep(1/10)
         remainTime -= 0.1
@@ -361,8 +363,10 @@ def main():
             pygame.time.delay(2000)
             
             while running:
+                stop_threads = False
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        stop_threads = True
                         pygame.quit()
                         return None
                 
@@ -377,7 +381,6 @@ def main():
 
                 start = perf_counter()
 
-                stop_threads = False
                 que = Queue()
                 my_list = []
                 
