@@ -16,17 +16,15 @@ user:
         remain_time: float
             remaining time(unit: second)
     return: row, column
-
 定義請看 variables.py
 輔助函式請看 simplelib.py
 整個 user 都可以改，除此之外都不要改
-
 NOTE: 若要debug，請使用 print("message", file=sys.stderr)，不要 print 到stdout
 '''
 
+
 def user(board,myStone,remain_time):
   score = [[0 for j in range(BOARDSIZE)] for i in range(BOARDSIZE)] # score 儲存每個格子的分數
-
   for i in range(BOARDSIZE):
     for j in range(BOARDSIZE): # 遍例每個格子
       if board[i][j] is EMPTY: # 對空的格子算分
@@ -35,7 +33,7 @@ def user(board,myStone,remain_time):
         left blank to you
         '''
         board[i][j] = EMPTY # 試完了，拿起來
-
+  
   # 取最大分數的格子回傳
   maxi = 0
   maxj = 0
@@ -46,7 +44,7 @@ def user(board,myStone,remain_time):
         max_score = score[i][j]
         maxi = i
         maxj = j
-  print(maxi, maxj, max_score, file=sys.stderr)
+  # print(maxi, maxj, max_score, file=sys.stderr)
   return maxi, maxj
 
 
@@ -56,7 +54,9 @@ def main():
   r = re.compile(r"[^, 0-9-]")
   raw_data = input()
   raw_data = r.sub("",raw_data)
+  # print(raw_data)
   user_list = [int(coord) for coord in raw_data.split(', ')]
+  # print(user_list)
   input_board = [[]] * 15
   for row in range(15):
     input_board[row] = [0] * 15
@@ -65,9 +65,10 @@ def main():
       input_board[i][j] = user_list[i*15+j]
 
   input_mystone = user_list[225]
-  remain_time = user_list[226]
-  i, j = user(input_board,input_mystone,remain_time)
+  remain_t = user_list[226]
+  i, j = user(input_board,input_mystone,remain_t)
   print(i,j)
+
 
 if __name__ == '__main__':
     main()
