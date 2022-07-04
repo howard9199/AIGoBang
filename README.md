@@ -1,7 +1,7 @@
 # AIGoBang
 
-請先照著 programs/template.py 的格式寫，其他都是測試用的檔案。 \
-若要測試執行，請修改game_set.py的設定，然後跑main.py
+請修改 template.py 中的 user function，不要修改其中的 main function
+若要測試執行，請修改 game_set.py 中的設定，然後跑main.py
 
 ## Install
 ```
