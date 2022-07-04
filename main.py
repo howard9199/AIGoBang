@@ -318,16 +318,10 @@ def main():
     team_a_name = team_a_path[team_a_path.rfind('/')+1:team_a_path.rfind('.')]
     team_b_name = team_b_path[team_b_path.rfind('/')+1:team_b_path.rfind('.')]
     if mode == 2:
-        #team_b_name = team_a_name
-        #team_b_path = team_a_path
         print("測試模式說明：")
         print("每一步棋皆等待玩家操作，若按下空白鍵，則由程式下出下一手，若用滑鼠點按則可直接下下一手棋。")
-    # modA = __import__(team_a_name)
-    # modB = __import__(team_b_name)
 
     board = RenjuBoard()
-    # for i in range(6):
-    #     history_board[i] = RenjuBoard()
     board.team_name[0] = team_a_name
     board.team_name[1] = team_b_name
 
@@ -383,8 +377,6 @@ def main():
 
                 que = Queue()
                 my_list = []
-                
-                # timer_thread = Thread(target=lambda q, arg1,arg2: q.put(timer(arg1,arg2)), args=(que, stop_threads,remainTime))
                 
                 try:
                     # result = check_output(f'python3 {sys.path[0]}/{team_path}', shell=True, input= str(str(board._board)+', '+str(color)),encoding='ascii',timeout=3).split()
@@ -443,7 +435,6 @@ def main():
                     board.draw_now(row,col)
                     pygame.display.flip()
                     
-                    
                     running = False
             set_count += 1
             if mode == 3 and total_set == 4 and set_count == total_set and board.team_score[0] == board.team_score[1] and board.team_step[0] == board.team_step[1]:
@@ -485,7 +476,6 @@ def main():
                         else:
                             stop_threads = True
                             [row, col] = [int(num) for num in result]
-                            print(row,col)
                     except TimeoutExpired:
                         print('TIME LIMIT EXCEEDED(超時)')
                         stop_threads = True
