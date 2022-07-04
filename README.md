@@ -25,7 +25,7 @@ Template: `template.py`
 Useful functions: `simplelib.py`(DO NOT EDIT)  
 Constant: `variables.py`(DO NOT EDIT)  
 ## Execute
-Please set up `game_set.py`, and run `python3 main_v2.py`  
+Please set up `game_set.py`, and run `python3 main.py`  
 WARNING! The competition system can't execute your code if python3 not installed
 ## Feature
 1. Mouse vs Computer test mode(mode=2)
